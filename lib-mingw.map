@@ -1,0 +1,5 @@
+MINGW {
+    global:
+        __emutls_v.value;
+    local: *;
+};

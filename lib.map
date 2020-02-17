@@ -1,0 +1,6 @@
+LIB {
+    global:
+        function;
+        value;
+    local: *;
+};
