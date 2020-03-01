@@ -36,6 +36,8 @@ Thread model: posix
 InstalledDir: C:\Program Files\LLVM\bin
 ```
 
+#### Native TLS
+
 Build:
 
 ```
@@ -53,6 +55,26 @@ Z:\tlstest>app-clang.exe
 4904: param = 1
 4904: value (old) = 1
 4904: value (new) = 1
+```
+
+#### Emulated TLS
+
+Build:
+
+```
+clang lib.c -femulated-tls --rtlib=compiler-rt -shared -Wl,/def:lib-emutls.def -Wl,/implib:lib-clang-emutls.lib -o lib-clang-emutls.dll
+clang app.c -femulated-tls --rtlib=compiler-rt -Wl,lib-clang-emutls.lib -o app-clang-emutls.exe
+```
+
+Option `--rtlib=compiler-rt` is required to resolve `__emutls_get_address`.
+
+Run:
+
+```
+Z:\my\tlstest>app-clang-emutls.exe
+6988: param = 0
+3920: param = 1
+Windows error: The parameter is incorrect.
 ```
 
 ### MinGW-w64
@@ -93,9 +115,10 @@ Z:\tlstest>app-mingw.exe
 
 * MinGW-w64 uses emuTLS and works as expected,
   but requires explicit `__emults_v` symbols export.
-* Clang uses native TLS and fails the test,
+* Clang using native TLS fails the test,
   because it is library's responsibility to follow [1].
-* **Clang `-femulated-tls` not tested.**
+* Clang using `-femulated-tls` with DLL crashes at runtime.
+    * TLS within binary work as expected.
 
 ## References
 

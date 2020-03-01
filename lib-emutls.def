@@ -1,3 +1,3 @@
 EXPORTS
-    value
+    __emutls_v.value
     function
